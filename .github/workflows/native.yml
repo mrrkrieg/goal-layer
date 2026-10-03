@@ -22,3 +22,5 @@ jobs:
         run: python3 scripts/analyze-focus-check.py --self-test
       - name: Build development bundle
         run: ./scripts/build-app.sh
+      - name: Build synthetic typing helper
+        run: ./scripts/build-focus-probe.sh
