@@ -1,6 +1,6 @@
 # Changelog
 
-This records local development work. No release tag, public repository, published binary, or downloadable beta has been verified.
+This records development and verified public source publication. No release tag, distributed binary, or downloadable beta has been verified.
 
 ## Unreleased — 2026-10-03
 
@@ -14,3 +14,5 @@ Manual goal/reward persistence, AI, observation, source verification, community 
 
 - Built the synthetic SwiftUI/AppKit overlay and standalone geometry runner (16 assertions pass). Added original observatory rendering, normal draft window, persistent display pinning, native menu recovery, and scoped QA tooling.
 - Recorded partial native checks and an initial resource sample; M1 remains incomplete and no personal reward loop or public beta is claimed.
+
+- Added coordinated synthetic focus reporting, a clearly explained temporary QA helper, strict report analysis with 50 constructed cases, and a thirty-minute resource sampling route. Native typing and final resource gates remain pending.

@@ -1,4 +1,4 @@
-name: Native build and geometry
+name: Native build and checks
 on:
   push:
   pull_request:
@@ -18,5 +18,7 @@ jobs:
           xcrun --show-sdk-version
       - name: Check geometry
         run: ./scripts/test.sh
+      - name: Check synthetic focus analyzer
+        run: python3 scripts/analyze-focus-check.py --self-test
       - name: Build development bundle
         run: ./scripts/build-app.sh

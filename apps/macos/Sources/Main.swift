@@ -26,22 +26,53 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         if arguments.contains("--preview-pulses") {
+            let reportPath = Self.argument("--qa-report", in: arguments)
             Task { @MainActor [weak self] in
-                try? await Task.sleep(for: .seconds(15))
-                var keyViolations = 0
-                var activationViolations = 0
+                if let startPath = Self.argument("--qa-start-file", in: arguments) {
+                    // Opt-in synthetic QA coordination; no desktop content is read.
+                    for _ in 0..<600 {
+                        if FileManager.default.fileExists(atPath: startPath) { break }
+                        try? await Task.sleep(for: .milliseconds(100))
+                    }
+                    guard FileManager.default.fileExists(atPath: startPath) else { return }
+                    try? await Task.sleep(for: .seconds(1))
+                } else { try? await Task.sleep(for: .seconds(15)) }
+                let started = Date().timeIntervalSince1970
+                var samples: [[String: Any]] = []
                 for index in 1...100 {
                     guard let shell = self?.shell else { return }
                     shell.applyBackgroundPreview(index)
-                    if shell.panel.isKeyWindow { keyViolations += 1 }
-                    if NSApp.isActive { activationViolations += 1 }
-                    try? await Task.sleep(for: .milliseconds(100))
+                    let frontmost = NSWorkspace.shared.frontmostApplication
+                    samples.append([
+                        "index": index, "timestamp": Date().timeIntervalSince1970,
+                        "panel_key": shell.panel.isKeyWindow, "app_active": NSApp.isActive,
+                        // This opt-in QA checks one known synthetic app identity. It
+                        // never records another application's name, title, or content.
+                        "frontmost_is_focus_probe": frontmost?.bundleIdentifier == "org.goallayer.focus-probe",
+                        "frontmost_available": frontmost != nil,
+                        "frontmost_has_bundle_identifier": frontmost?.bundleIdentifier != nil
+                    ])
+                    try? await Task.sleep(for: .milliseconds(250))
                 }
-                let report = "PREVIEW_PULSES count=100 key_samples=\(keyViolations) active_samples=\(activationViolations). Typing integrity needs a separate native check.\n"
-                FileHandle.standardOutput.write(Data(report.utf8))
+                let keyViolations = samples.filter { $0["panel_key"] as? Bool == true }.count
+                let activationViolations = samples.filter { $0["app_active"] as? Bool == true }.count
+                let report: [String: Any] = ["schema": "native-focus-pulses-v1", "started_at": started,
+                    "ended_at": Date().timeIntervalSince1970, "samples": samples,
+                    "count": samples.count, "key_violations": keyViolations, "activation_violations": activationViolations]
+                if let reportPath {
+                    do { try JSONSerialization.data(withJSONObject: report, options: [.prettyPrinted, .sortedKeys])
+                        .write(to: URL(fileURLWithPath: reportPath), options: .atomic) }
+                    catch { print("QA report save failed: \(error)") }
+                }
+                let line = "PREVIEW_PULSES count=100 key_samples=\(keyViolations) active_samples=\(activationViolations). See timestamped probe report for typing integrity.\n"
+                FileHandle.standardOutput.write(Data(line.utf8))
                 self?.shell?.state.feedback = ""
             }
         }
+    }
+    private static func argument(_ name: String, in arguments: [String]) -> String? {
+        guard let index = arguments.firstIndex(of: name), arguments.indices.contains(index + 1) else { return nil }
+        return arguments[index + 1]
     }
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { false }
 }

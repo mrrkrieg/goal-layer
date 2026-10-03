@@ -30,6 +30,8 @@ The originally attempted `swift test --scratch-path .build --disable-sandbox` fa
 
 M1 demonstrations use synthetic data only. Manual product state, SQLite, real rewards, AI, activity observation, browser integration, capture, and community services belong to later milestones. Do not request activity permissions or remote credentials to run the native spike.
 
+The [M1 QA procedure](docs/M1_QA.md) covers the explicit temporary typing window, coordinated synthetic reports, remaining native matrix, and resource sampling. Keep any interrupted or nonsynthetic run private.
+
 ## Changes and acceptance evidence
 
 Keep a change tied to a named milestone and its smallest usable result. A contribution should explain the concrete problem, resulting behavior, affected acceptance gates, and remaining limitations. Record:

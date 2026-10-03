@@ -32,9 +32,12 @@ while True:
         break
     time.sleep(min(args.interval, args.seconds - elapsed))
 duration = samples[-1]["elapsed_seconds"] - samples[0]["elapsed_seconds"]
-average = 100 * (samples[-1]["cpu_seconds"] - samples[0]["cpu_seconds"]) / duration
-summary = {"schema": "goal-layer-resource-sample-v1", "method": "ps cumulative CPU delta / monotonic duration; RSS in KiB", "duration_seconds": duration,
-           "average_cpu_percent_one_core": round(average, 4), "max_resident_mib": round(max(s["resident_kib"] for s in samples) / 1024, 3),
-           "samples": samples, "memory_after_30_minutes": "not measured by this sample"}
+cpu_end = next((sample for sample in samples if sample["elapsed_seconds"] >= 600), samples[-1])
+cpu_duration = cpu_end["elapsed_seconds"] - samples[0]["elapsed_seconds"]
+average = 100 * (cpu_end["cpu_seconds"] - samples[0]["cpu_seconds"]) / cpu_duration if cpu_duration > 0 else None
+memory_sample = next((sample for sample in samples if sample["elapsed_seconds"] >= 1800), None)
+summary = {"schema": "goal-layer-resource-sample-v2", "method": "ps cumulative CPU delta / monotonic duration; RSS in KiB", "duration_seconds": duration,
+           "cpu_window_seconds": cpu_duration, "average_cpu_percent_one_core": round(average, 4) if average is not None else None, "max_resident_mib": round(max(s["resident_kib"] for s in samples) / 1024, 3),
+           "samples": samples, "memory_after_30_minutes": {"elapsed_seconds": memory_sample["elapsed_seconds"], "resident_mib": round(memory_sample["resident_kib"] / 1024, 3)} if memory_sample else "not measured by this sample"}
 args.output.write_text(json.dumps(summary, indent=2) + "\n")
 print(json.dumps({k:v for k,v in summary.items() if k != "samples"}), flush=True)

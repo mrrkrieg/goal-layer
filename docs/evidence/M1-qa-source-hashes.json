@@ -1,0 +1,18 @@
+{
+  "schema": "native-qa-source-hashes-v1",
+  "sha256": {
+    "Package.swift": "4654554773fbfe542273de825a067a4720b375874c548d5b81d89ccd3a0cdba5",
+    "Tests/GoalLayerTests/main.swift": "eebd273f230a997707b4d4a38f92a8dd4824d5341c811e76cca7b3b59275cd15",
+    "apps/macos/Geometry/Placement.swift": "338237fd4c2cc465da52fb8a7d55924bd22fd4f33dae0ac9bbc2ac4061ead428",
+    "apps/macos/Sources/Main.swift": "07060d8bd29539ed41130196ee490ea4ddd3dbabf586f323465cf38405279230",
+    "apps/macos/Sources/NativeShell.swift": "46adf3d6574974e6df5fd57678a173d2cafe211b2873d250f5f8ac14a40f8a84",
+    "apps/macos/Sources/ObservatoryView.swift": "6577c01e084c37b5c7ebc0db5bd4d0e6bf89a3dc3f203657da20df98e99fe2da",
+    "apps/macos/Sources/OverlayViews.swift": "8ee85baec53d2b24424ea367b73906c73858717329e43eabde5f75878c357eb1",
+    "apps/macos/Sources/SpikeState.swift": "c24277e56e5d878b2f1fa3ea26a1d7ffc413063bd81aa648d9d6f4ae6ca1a4d1",
+    "scripts/analyze-focus-check.py": "1fdba9563a797a8db2342d1a323e9d62d06faf2a4d33d686589de2d03f8fdd7c",
+    "scripts/sample-resources.py": "5c89f3476ff7dadb987126a2c397cc153d5f26ea6bf500b4b18485854bc1c192",
+    "tools/FocusProbe.swift": "104a6a73d0c9b1d41d34ad9b0bae7b57dd0bf1e1025cf69f2a01bc903a3ab6e3"
+  },
+  "goal_layer_binary_sha256": "e83abd3653583559891bc81651f690dd46e8c2d0090aac072e330ac0593aad84",
+  "note": "Current QA instrumentation and clean collapsed app sampled on 2026-10-03; original native fingerprints retained separately. Resource measurement is pending."
+}

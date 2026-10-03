@@ -54,10 +54,10 @@ The attempted SwiftPM test route failed with `no such module XCTest` in the Comm
 
 | Gate | Current result | Required evidence |
 | --- | --- | --- |
-| Clean build and real app-bundle launch | Initial local release build/launch observed; clean-checkout gate pending | Exact output/source state from `./scripts/build-app.sh` and native launch on the pinned environment |
+| Clean build and real app-bundle launch | Fresh local clone built successfully; native launch observed; full install/UI gate pending | Exact output/source state from `./scripts/build-app.sh` and native launch on the pinned environment |
 | Deterministic geometry checks | SwiftPM XCTest route failed; standalone route passed 16/16 assertions | Actual output from `./scripts/test.sh`; geometry scope described honestly |
 | Open/dismiss and draft preservation | Click expansion, Escape, conventional-window text entry, draft preservation across dismissal, and menu controls observed; full gate pending | Menu open, outside click, close action, intentional text entry/dismissal, draft preservation |
-| Background focus and pointer bounds | Not run in this review | 100 synthetic background updates while typing; zero activation/cursor/keystroke/shortcut interference; outside clicks/drags reach underlying app |
+| Background focus and pointer bounds | Not run in this review | Coordinated QA tooling prepared; incomplete/interrupted trials recorded in native evidence. Still require 100 updates with zero activation/cursor/keystroke/shortcut interference; outside clicks/drags reach underlying app |
 | Safe placement and displays | Built-in 2× notched display and external 1× display observed; pin and restart restored external placement; unplug/wake pending | Device/display details, notch/menu safe geometry, pinning, scaling, attach/remove, unplug/replug, wake |
 | Spaces, Stage Manager, maximized/fullscreen | Not run in this review | Declared available OS/configurations, conservative hide/menu fallback, no switching Spaces or exiting another app's fullscreen; unavailable configurations labeled |
 | Keyboard, accessibility, larger text, reduced motion | AX controls/world/next action and enlarged text with visible primary action observed; VoiceOver/full gate pending | Accessible names/order, VoiceOver observations, reachable primary action, static reduced-motion transition |
@@ -90,3 +90,9 @@ See [M1 native record](evidence/M1-native-record.md) for exact commands, sanitiz
 The [public main branch](https://github.com/mrrkrieg/goal-layer) matched the reviewed initial source commit `d9abcc37ca60f7779abfb88a3114b9439756763f`. [CI run 37132653335](https://github.com/mrrkrieg/goal-layer/actions/runs/37132653335) completed successfully: macOS 15.7.9 (24G830), arm64, Swift 6.0.3, SDK 15.2, 16/16 geometry assertions and native bundle build. CI has no native UI interaction proof. A separate fresh local clone also passed 16 assertions and the bundle build, with no copied build cache/artifacts.
 
 Eight [milestones](https://github.com/mrrkrieg/goal-layer/milestones) and seven acceptance issues were created. M0 is closed; [M1](https://github.com/mrrkrieg/goal-layer/issues/1) remains open. [Tracking URLs](evidence/project-tracking.json) identify later work. No invitation, announcement, or message to other people was sent.
+
+## Native QA tooling follow-up
+
+Timestamped synthetic pulse/probe reports, explicit start coordination, compact all-callback counters, and a strict analyzer are implemented. The temporary helper now explains its purpose and is centered by default; its new start-button layout is compiled, not visually verified. `python3 scripts/analyze-focus-check.py --self-test` passed 50 constructed cases, separately from the 16 geometry assertions. The complete typing/shortcut gate is still incomplete: initial timing was insufficient and a later run was invalidated by concurrent user input. Nonsynthetic/interrupted reports were kept private. See the [QA procedure](M1_QA.md) and [native follow-up evidence](evidence/M1-native-record.md).
+
+The clean collapsed app's final-build thirty-minute resource sample is in progress; no final resource pass is claimed. M1 remains the next incomplete milestone. M2–M7 remain planned under the requested dependency order; no sequencing answer has been assumed.
