@@ -61,3 +61,9 @@ The [light preview](M1-observatory-light.png) and [dark preview](M1-observatory-
 - Full native walkthrough recording and fresh contributor review of that matrix.
 
 The next incomplete milestone is M1. M2 is not activated under the original strict dependency order. The pending user question asks whether to retain that order or allow M2 development while M1 stays explicitly incomplete. No reply has been assumed.
+
+## Clean source build and CI follow-up
+
+Initial source commit: `d9abcc37ca60f7779abfb88a3114b9439756763f`. A fresh separate local clone, containing no build output, ran `./scripts/test.sh` (16/16, 27.32 seconds including cold compilation) then `./scripts/build-app.sh` (10.56 seconds). Both succeeded. The first attempt called the scripts from the parent directory and failed before running a check; the corrected invocation ran from the clone root.
+
+[CI run](https://github.com/mrrkrieg/goal-layer/actions/runs/37132653335) succeeded on macOS 15.7.9 (24G830), arm64, Swift 6.0.3, SDK 15.2. It passed 16 geometry assertions and built the app (5.03 seconds). This adds headless build/geometry evidence for macOS 15.7.9, not UI/Spaces/fullscreen evidence.

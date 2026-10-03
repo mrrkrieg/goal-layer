@@ -23,7 +23,7 @@ The inspected baseline is:
 | Full Xcode | Unavailable in this environment |
 | Swift language mode | Swift 6, explicitly configured with `swiftLanguageModes: [.v6]` |
 | Third-party package versions | None selected for M1; inventory must match actual manifest/source |
-| Hosted CI runner | Workflow pins `macos-15` and `/Applications/Xcode_16.2.app`; execution pending |
+| Hosted CI runner | Workflow pins `macos-15` and `/Applications/Xcode_16.2.app`; initial execution passed; see STATUS.md |
 
 The Swift toolchain prints a default target of `arm64-apple-macosx16.0`. `Package.swift` explicitly sets `platforms: [.macOS(.v14)]`; the resulting artifact and actual macOS 14 compatibility still require validation. The default target output does not prove either. Build availability and actual runtime compatibility remain separate checks.
 
@@ -100,3 +100,5 @@ An owner is a responsibility in this project, not a claim that a person/account 
 The official [macOS 15 runner inventory](https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md) lists Xcode 16.2 and SDK 15.2. The workflow pins that developer directory and the checkout action commit `11d5960a326750d5838078e36cf38b85af677262`. Runner images can change; the workflow records actual versions and fails when its selected Xcode is unavailable. CI validates builds and geometry only, never native focus/Spaces/VoiceOver.
 
 The public destination was verified as `mrrkrieg/goal-layer` using authenticated GitHub CLI and connector identity checks. Repository creation and public visibility are verified; source push and CI are recorded separately. Native display preferences now use the public ColorSync display UUID conversion; temporary display numbers are not persisted.
+
+The first pinned CI run passed on macOS 15.7.9 arm64 with Swift 6.0.3 and SDK 15.2. This is build/geometry support only; the native interaction support matrix remains incomplete.

@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-03. This is the current implementation record. The original specification documents retain the documentation-only handoff statements they had when reviewed. They define the requirements; they do not provide runtime evidence for work begun later.
 
-M0 is complete: the isolated source, toolchain/build decisions, contributor contract, synthetic fixture review, licensing, and next task are recorded. M1 native implementation is in progress: an initial release bundle was built and launched, and click expansion/Escape collapse were observed on the available Mac. These are partial checks, not M1 acceptance. Complete native gates remain pending until their required checks and demonstrations are recorded. M2–M7 runtime features remain planned. The public repository has been created and its visibility verified; the source push is pending this record. No downloadable beta release exists.
+M0 is complete: the isolated source, toolchain/build decisions, contributor contract, synthetic fixture review, licensing, and next task are recorded. M1 native implementation is in progress: an initial release bundle was built and launched, and click expansion/Escape collapse were observed on the available Mac. These are partial checks, not M1 acceptance. Complete native gates remain pending until their required checks and demonstrations are recorded. M2–M7 runtime features remain planned. The public repository has been created and its visibility verified; the source push is verified, and build/geometry CI passed on the initial implementation commit. No downloadable beta release exists.
 
 ## Milestone state
 
@@ -73,8 +73,8 @@ M1 evidence must identify the source state, command/interaction, actual result, 
 | Action | Verified state |
 | --- | --- |
 | Isolated local project preparation | Present locally |
-| Source commit/tag and clean-checkout demonstration | Pending |
-| Public remote repository creation/visibility/source push | [mrrkrieg/goal-layer](https://github.com/mrrkrieg/goal-layer) created; PUBLIC visibility verified; first source push pending |
+| Source commit/tag and clean-checkout demonstration | Initial source `d9abcc37ca60f7779abfb88a3114b9439756763f`; separate fresh clone build and 16 assertions passed. No release tag or full install/UI demonstration. |
+| Public remote repository creation/visibility/source push | [mrrkrieg/goal-layer](https://github.com/mrrkrieg/goal-layer) created; PUBLIC visibility verified; source push verified on main |
 | Private vulnerability/conduct reporting setup | GitHub private vulnerability reporting enabled and GET verified; conduct route remains pending |
 | Public downloadable beta, integrity metadata, signing/notarization | Pending |
 | Hosted service, real providers, integrations, pilot or user-study results | Planned; none verified |
@@ -84,3 +84,9 @@ Record each publication step separately when performed. A local `.app`, reposito
 ## Consolidated M1 evidence
 
 See [M1 native record](evidence/M1-native-record.md) for exact commands, sanitized device/display data, synthetic screenshots, 16 geometry assertions, background pulse samples, draft and larger-text observations, and all unrun gates. M1 remains incomplete. The initial resource sample predates the display recovery/pointer fixes, and cannot certify the final build.
+
+## Verified source and CI
+
+The [public main branch](https://github.com/mrrkrieg/goal-layer) matched the reviewed initial source commit `d9abcc37ca60f7779abfb88a3114b9439756763f`. [CI run 37132653335](https://github.com/mrrkrieg/goal-layer/actions/runs/37132653335) completed successfully: macOS 15.7.9 (24G830), arm64, Swift 6.0.3, SDK 15.2, 16/16 geometry assertions and native bundle build. CI has no native UI interaction proof. A separate fresh local clone also passed 16 assertions and the bundle build, with no copied build cache/artifacts.
+
+Eight [milestones](https://github.com/mrrkrieg/goal-layer/milestones) and seven acceptance issues were created. M0 is closed; [M1](https://github.com/mrrkrieg/goal-layer/issues/1) remains open. [Tracking URLs](evidence/project-tracking.json) identify later work. No invitation, announcement, or message to other people was sent.

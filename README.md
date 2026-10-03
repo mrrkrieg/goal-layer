@@ -2,7 +2,7 @@
 
 Goal Layer is a macOS companion that turns accepted progress toward a chosen goal into a small, persistent floating observatory. Its proposed loop is: define an outcome, approve a practical quest, do the work, confirm what changed, and develop the world.
 
-The standalone foundation is prepared locally. A synthetic native overlay spike has been built and launched on the available Mac, with expansion/Escape, draft entry, display pinning/restart, and enlarged-text checks. M1 remains in development; its full native acceptance gates are pending. This is not a released personal productivity app. The public source repository is [mrrkrieg/goal-layer](https://github.com/mrrkrieg/goal-layer); its first source push is being verified. There is no downloadable beta or notarized distribution.
+The standalone foundation is prepared locally. A synthetic native overlay spike has been built and launched on the available Mac, with expansion/Escape, draft entry, display pinning/restart, and enlarged-text checks. M1 remains in development; its full native acceptance gates are pending. This is not a released personal productivity app. The public source repository is [mrrkrieg/goal-layer](https://github.com/mrrkrieg/goal-layer); the reviewed source is pushed to its public main branch. There is no downloadable beta or notarized distribution.
 
 | Capability | Current status |
 | --- | --- |
@@ -34,7 +34,7 @@ From the project root, the M1 development entry points are:
 open build/Goal\ Layer.app --args --demo
 ```
 
-These commands describe the implementation route; their actual results belong in [Status](docs/STATUS.md) and the milestone evidence. `swift test --scratch-path .build --disable-sandbox` failed in this Command Line Tools environment because XCTest is unavailable (`no such module XCTest`). `scripts/test.sh` runs the deterministic standalone `GoalLayerChecks` executable instead; geometry checks do not replace native interaction testing.
+These commands describe the implementation route; fresh-checkout builds, 16/16 assertions, and CI passed; exact scope and results are in [Status](docs/STATUS.md) and the milestone evidence. `swift test --scratch-path .build --disable-sandbox` failed in this Command Line Tools environment because XCTest is unavailable (`no such module XCTest`). `scripts/test.sh` runs the deterministic standalone `GoalLayerChecks` executable instead; geometry checks do not replace native interaction testing.
 
 The demo is a synthetic native interaction spike. It does not create real goals, award persistent XP, observe activity, or communicate with an AI provider or community. It needs no account, API key, model, server, browser extension, or observation permission. Its interaction claims remain subject to the M1 walkthrough.
 

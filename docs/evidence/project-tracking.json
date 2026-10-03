@@ -1,0 +1,33 @@
+{
+  "repository": "mrrkrieg/goal-layer",
+  "issues": [
+    {
+      "milestone": "M1",
+      "url": "https://github.com/mrrkrieg/goal-layer/issues/1"
+    },
+    {
+      "milestone": "M2",
+      "url": "https://github.com/mrrkrieg/goal-layer/issues/2"
+    },
+    {
+      "milestone": "M3",
+      "url": "https://github.com/mrrkrieg/goal-layer/issues/3"
+    },
+    {
+      "milestone": "M4",
+      "url": "https://github.com/mrrkrieg/goal-layer/issues/4"
+    },
+    {
+      "milestone": "M5",
+      "url": "https://github.com/mrrkrieg/goal-layer/issues/5"
+    },
+    {
+      "milestone": "M6",
+      "url": "https://github.com/mrrkrieg/goal-layer/issues/6"
+    },
+    {
+      "milestone": "M7",
+      "url": "https://github.com/mrrkrieg/goal-layer/issues/7"
+    }
+  ]
+}
