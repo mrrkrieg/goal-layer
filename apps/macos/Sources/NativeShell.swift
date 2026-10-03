@@ -133,7 +133,10 @@ final class NativeShell: NSObject, NSWindowDelegate {
     private func updatePointerRegion() {
         // Pointer position is used transiently for native hit testing only, never recorded.
         // The whole rectangular window passes through when the pointer is in a clipped corner.
-        panel.ignoresMouseEvents = !OverlayPlacement.containsVisiblePoint(NSEvent.mouseLocation,frame: panel.frame,expanded: state.expanded)
+        let ignores = !OverlayPlacement.containsVisiblePoint(NSEvent.mouseLocation, frame: panel.frame, expanded: state.expanded)
+        // Avoid repeating a native window-server mutation for every movement
+        // outside the panel. Only entering/leaving the visible region changes it.
+        if panel.ignoresMouseEvents != ignores { panel.ignoresMouseEvents = ignores }
     }
 
     func applyBackgroundPreview(_ index: Int) {

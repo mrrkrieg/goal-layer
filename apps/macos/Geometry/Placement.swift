@@ -3,6 +3,11 @@ import CoreGraphics
 /// All values are screen points, including negative display origins.
 public enum OverlayPlacement {
     public static func containsVisiblePoint(_ point: CGPoint, frame: CGRect, expanded: Bool) -> Bool {
+        // Most global pointer events are outside the small panel. Reject them
+        // without allocating a path; include boundaries so CGPath retains the
+        // exact edge semantics of the visible rounded region.
+        guard point.x >= frame.minX, point.x <= frame.maxX,
+              point.y >= frame.minY, point.y <= frame.maxY else { return false }
         let radius: CGFloat = expanded ? 22 : 18
         return CGPath(roundedRect: frame, cornerWidth: radius, cornerHeight: radius, transform: nil).contains(point)
     }

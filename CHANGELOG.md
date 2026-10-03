@@ -16,3 +16,5 @@ Manual goal/reward persistence, AI, observation, source verification, community 
 - Recorded partial native checks and an initial resource sample; M1 remains incomplete and no personal reward loop or public beta is claimed.
 
 - Added coordinated synthetic focus reporting, a clearly explained temporary QA helper, strict report analysis with 50 constructed cases, and a thirty-minute resource sampling route. Native typing and final resource gates remain pending.
+
+- Measured a CPU budget failure (1.082% against <1%) and reduced repeated pointer-hit work. Thirty-minute memory was 50.172 MiB. Fresh resource verification and native pointer/focus gates remain pending.

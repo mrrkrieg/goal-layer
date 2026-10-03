@@ -98,3 +98,9 @@ Timestamped synthetic pulse/probe reports, explicit start coordination, compact 
 The clean collapsed app's final-build thirty-minute resource sample is in progress; no final resource pass is claimed. M1 remains the next incomplete milestone. M2–M7 remain planned under the requested dependency order; no sequencing answer has been assumed.
 
 [QA CI run 37136042580](https://github.com/mrrkrieg/goal-layer/actions/runs/37136042580) passed for source `098d32d59e2664ca2b002ed643759d67f3a4fcb8`: macOS 15.7.9 (24G830), Swift 6.0.3, SDK 15.2; 16/16 geometry assertions, 50 constructed analyzer cases, and app build (7.36 seconds). The public remote head was independently verified against that source hash. This remains headless build/checker evidence. CI is also being extended to compile the standalone synthetic typing helper; it does not launch either UI.
+
+## Resource-budget result and current fix
+
+The clean QA build's completed thirty-minute sample failed the CPU gate: **1.082% of one logical core over 600.735 seconds**, against the unchanged <1% target. Memory after thirty minutes passed: **50.172 MiB / 52.609 MB decimal**. [Raw result and follow-up](evidence/M1-native-record.md) preserve the failed result.
+
+Pointer handling now rejects positions outside the panel before rounded-path allocation and avoids repeated mouse-ignore setter calls. Build and 16 geometry assertions passed; a fresh clean-build resource run is in progress, with [its own fingerprint](evidence/M1-pointer-optimized-source-hashes.json). Improvement is unverified until that run completes. M1 remains incomplete, including controlled native pointer/focus, display/Space/fullscreen/accessibility/latency and recording gates. M2–M7 remain planned.
