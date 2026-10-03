@@ -1,0 +1,34 @@
+# macOS and editor state
+.DS_Store
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# SwiftPM and native build output
+.build/
+.build-*/
+.swiftpm/
+build/
+DerivedData/
+xcuserdata/
+*.xcuserstate
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.p12
+*.mobileprovision
+*.provisionprofile
+*.keychain-db
+
+# Private runtime data and diagnostics; use reviewed synthetic fixtures in source
+private/
+local-data/
+captures/
+logs/
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*

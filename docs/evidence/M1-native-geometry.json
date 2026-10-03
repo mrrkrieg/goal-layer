@@ -1,0 +1,38 @@
+{
+  "app_active" : true,
+  "display_count" : 2,
+  "displays" : [
+    {
+      "frame" : {
+        "height" : 982,
+        "width" : 1512,
+        "x" : 0,
+        "y" : 0
+      },
+      "safe_top" : 32,
+      "scale" : 2
+    },
+    {
+      "frame" : {
+        "height" : 1080,
+        "width" : 1920,
+        "x" : -316,
+        "y" : 982
+      },
+      "safe_top" : 0,
+      "scale" : 1
+    }
+  ],
+  "expanded" : true,
+  "frame" : {
+    "height" : 560,
+    "width" : 460,
+    "x" : 526,
+    "y" : 381
+  },
+  "network_features" : false,
+  "observation_enabled" : false,
+  "panel_key" : true,
+  "schema" : "native-spike-diagnostics-v1",
+  "window_level" : 3
+}

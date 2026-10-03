@@ -1,0 +1,14 @@
+{
+  "schema": "native-source-hashes-v1",
+  "sha256": {
+    "apps/macos/Geometry/Placement.swift": "338237fd4c2cc465da52fb8a7d55924bd22fd4f33dae0ac9bbc2ac4061ead428",
+    "apps/macos/Sources/Main.swift": "ddff80ac86d7d0080ff064ffc00896991c42a57bb0f68ad31daf03b8242ebc64",
+    "apps/macos/Sources/NativeShell.swift": "46adf3d6574974e6df5fd57678a173d2cafe211b2873d250f5f8ac14a40f8a84",
+    "apps/macos/Sources/ObservatoryView.swift": "6577c01e084c37b5c7ebc0db5bd4d0e6bf89a3dc3f203657da20df98e99fe2da",
+    "apps/macos/Sources/OverlayViews.swift": "8ee85baec53d2b24424ea367b73906c73858717329e43eabde5f75878c357eb1",
+    "apps/macos/Sources/SpikeState.swift": "c24277e56e5d878b2f1fa3ea26a1d7ffc413063bd81aa648d9d6f4ae6ca1a4d1",
+    "Package.swift": "4654554773fbfe542273de825a067a4720b375874c548d5b81d89ccd3a0cdba5",
+    "Tests/GoalLayerTests/main.swift": "eebd273f230a997707b4d4a38f92a8dd4824d5341c811e76cca7b3b59275cd15"
+  },
+  "note": "Final code hashes; the initial resource sample predates final shell fixes."
+}

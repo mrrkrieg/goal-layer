@@ -1,0 +1,145 @@
+{
+  "specification_version": "0.0.0-spec",
+  "fixture_kind": "synthetic_design_example_not_an_implemented_schema",
+  "goal": {
+    "id": "goal_shortcut_demo",
+    "plan_version": 1,
+    "title": "Publish a working keyboard shortcut utility",
+    "outcome": "A new tester can install the utility and demonstrate its declared shortcut flow.",
+    "completion_criteria": [
+      "A source release exists with the agreed package.",
+      "The shortcut flow passes the declared native checks.",
+      "A new tester can follow the setup instructions."
+    ],
+    "target_date": null,
+    "review_date": null,
+    "sharing": "private",
+    "milestones": [
+      {
+        "id": "milestone_core_flow",
+        "title": "Installable and demonstrated core flow",
+        "personal_xp_budget": 200,
+        "quest_allocation": 160,
+        "completion_reserve": 40,
+        "policy_version": "personal-v1",
+        "overall_completion_criteria": [
+          "All three quest conditions are accepted.",
+          "The integrated flow is demonstrated on a supported Mac."
+        ],
+        "quests": [
+          {
+            "id": "quest_decision",
+            "version": 1,
+            "work_unit_credit_key": "work_decision_note",
+            "xp": 40,
+            "title": "Resolve the implementation question",
+            "acceptance_condition": "A short decision note compares two viable approaches against the agreed requirements.",
+            "evidence_routes": [
+              "user_confirmed",
+              "artifact_backed"
+            ],
+            "state": "approved"
+          },
+          {
+            "id": "quest_flow",
+            "version": 1,
+            "work_unit_credit_key": "work_shortcut_flow",
+            "xp": 60,
+            "title": "Build the shortcut flow",
+            "acceptance_condition": "The declared shortcut interaction is demonstrated on the supported Mac.",
+            "evidence_routes": [
+              "user_confirmed",
+              "artifact_backed"
+            ],
+            "state": "approved"
+          },
+          {
+            "id": "quest_checks",
+            "version": 1,
+            "work_unit_credit_key": "work_flow_validation",
+            "xp": 60,
+            "title": "Verify the flow and write setup steps",
+            "acceptance_condition": "Saved native checks pass and a new tester can follow the setup steps.",
+            "evidence_routes": [
+              "user_confirmed",
+              "artifact_backed"
+            ],
+            "state": "approved"
+          }
+        ]
+      }
+    ]
+  },
+  "expected_scenarios": [
+    {
+      "action": "Observe app identity and 30 browser visits.",
+      "expected_net_xp": 0,
+      "expected_level": 1,
+      "goal_completed": false
+    },
+    {
+      "action": "User accepts the decision-note completion.",
+      "expected_net_xp": 40,
+      "expected_level": 1,
+      "provenance": "artifact_backed",
+      "goal_completed": false
+    },
+    {
+      "action": "Replay the same logical completion 1000 times.",
+      "expected_net_xp": 40,
+      "expected_level": 1,
+      "goal_completed": false
+    },
+    {
+      "action": "Accept the 60-XP flow and 60-XP validation quests.",
+      "expected_net_xp": 160,
+      "expected_level": 1,
+      "milestone_complete": false,
+      "reason": "The overall integrated milestone condition must still be accepted."
+    },
+    {
+      "action": "Accept the milestone's integrated condition.",
+      "expected_net_xp": 200,
+      "expected_level": 2,
+      "milestone_complete": true,
+      "goal_completed": false,
+      "reason": "A release and the other goal-level conditions remain separate."
+    },
+    {
+      "action": "Undo the validation quest, invalidating the milestone.",
+      "expected_net_xp": 100,
+      "expected_level": 1,
+      "expected_reversals": [
+        60,
+        40
+      ],
+      "milestone_complete": false,
+      "goal_completed": false
+    },
+    {
+      "action": "Repeat the same undo.",
+      "expected_net_xp": 100,
+      "expected_level": 1,
+      "new_reversals": 0
+    }
+  ],
+  "sample_ai_assessment": {
+    "schema_version": "assessment-v1",
+    "request_id": "assessment_request_example",
+    "goal_id": "goal_shortcut_demo",
+    "quest_id": "quest_decision",
+    "quest_version": 1,
+    "evidence_ids": [
+      "evidence_selected_note"
+    ],
+    "recommendation": "needs_confirmation",
+    "supported_criteria": [
+      "The note compares the two named approaches."
+    ],
+    "missing_criteria": [
+      "The user has not accepted that the comparison resolves the question."
+    ],
+    "explanation": "This note may complete the implementation decision. Review the comparison before confirming.",
+    "confidence": 0.78
+  }
+}
