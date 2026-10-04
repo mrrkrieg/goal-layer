@@ -21,4 +21,4 @@ Manual goal/reward persistence, AI, observation, source verification, community 
 
 
 - Completed the pointer-optimized resource run: 0.6393% CPU over its specified ten-minute window and 28.5 MiB RSS after thirty minutes. Preserved the preceding failure and the 1.3522% whole-run CPU average.
-- Implemented a conservative public-API fullscreen/Space guard with collapsed restoration and tracked-menu eligibility; local build, 16 geometry checks and ad-hoc signature passed. Native fullscreen QA and a new guard-build resource sample remain pending.
+- Implemented a conservative public-API fullscreen/Space guard with collapsed restoration and tracked-menu eligibility; local build, 16 geometry checks and ad-hoc signature passed. The guard-build resource sample passed: 0.6043% ten-minute CPU and 38.641 MiB RSS after thirty minutes. Native fullscreen, controlled focus/pointer, display, accessibility, P95 latency and recording gates remain pending.
