@@ -1,0 +1,18 @@
+{
+  "schema": "native-qa-source-hashes-v1",
+  "sha256": {
+    "Package.swift": "4654554773fbfe542273de825a067a4720b375874c548d5b81d89ccd3a0cdba5",
+    "Tests/GoalLayerTests/main.swift": "eebd273f230a997707b4d4a38f92a8dd4824d5341c811e76cca7b3b59275cd15",
+    "apps/macos/Geometry/Placement.swift": "2ec61b7f7ff52c7aca20f5b3bb2f61d238298e6ab5a589193e974a615db6ff65",
+    "apps/macos/Sources/Main.swift": "07060d8bd29539ed41130196ee490ea4ddd3dbabf586f323465cf38405279230",
+    "apps/macos/Sources/NativeShell.swift": "9ba9a99e67cbaeb6f9a08fdb36ce659e09a6dca7c0fbc00731e454ddf1315d27",
+    "apps/macos/Sources/ObservatoryView.swift": "6577c01e084c37b5c7ebc0db5bd4d0e6bf89a3dc3f203657da20df98e99fe2da",
+    "apps/macos/Sources/OverlayViews.swift": "8ee85baec53d2b24424ea367b73906c73858717329e43eabde5f75878c357eb1",
+    "apps/macos/Sources/SpikeState.swift": "c24277e56e5d878b2f1fa3ea26a1d7ffc413063bd81aa648d9d6f4ae6ca1a4d1",
+    "scripts/analyze-focus-check.py": "1fdba9563a797a8db2342d1a323e9d62d06faf2a4d33d686589de2d03f8fdd7c",
+    "scripts/sample-resources.py": "5c89f3476ff7dadb987126a2c397cc153d5f26ea6bf500b4b18485854bc1c192",
+    "tools/FocusProbe.swift": "104a6a73d0c9b1d41d34ad9b0bae7b57dd0bf1e1025cf69f2a01bc903a3ab6e3"
+  },
+  "goal_layer_binary_sha256": "617620cf418257f79154415cf695af6441376e1fde049b13ce9eaaa85cbc231e",
+  "note": "Fullscreen/Space guard build; default synthetic introduction, collapsed at sampling start, no QA pulse flags. Native expansion observed; dismissal test interrupted by concurrent user input. Source working tree based on 5ebb599950c322f9662a6585698397f3b3b22abe; exact file hashes govern this sample."
+}

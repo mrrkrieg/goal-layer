@@ -18,7 +18,7 @@ final class PanelHostingView: NSHostingView<OverlayRoot> {
 }
 
 @MainActor
-final class NativeShell: NSObject, NSWindowDelegate {
+final class NativeShell: NSObject, NSWindowDelegate, NSMenuDelegate {
     let state: SpikeState
     let panel: OverlayPanel
     private var statusItem: NSStatusItem!
@@ -30,6 +30,9 @@ final class NativeShell: NSObject, NSWindowDelegate {
     private var notificationTokens: [NSObjectProtocol] = []
     private var workspaceTokens: [NSObjectProtocol] = []
     private var selectedDisplayUUID: String?
+    private var presentationObserver: NSKeyValueObservation?
+    private var systemFullscreen = false
+    private var trackingRecoveryMenus: [NSMenu] = []
     private let settings = UserDefaults.standard
 
     init(state: SpikeState) {
@@ -38,6 +41,21 @@ final class NativeShell: NSObject, NSWindowDelegate {
                              styleMask: [.borderless,.nonactivatingPanel], backing: .buffered, defer: false)
         super.init()
         selectedDisplayUUID = settings.string(forKey: "selectedDisplayUUID")
+        // Suppression must be known before the first panel ordering. This public
+        // UI-mode flag neither identifies nor reads another application's content.
+        systemFullscreen = NSApp.currentSystemPresentationOptions.contains(.fullScreen)
+        presentationObserver = NSApp.observe(\.currentSystemPresentationOptions, options: [.new]) { [weak self] _, change in
+            // Transfer only a value flag, never the observed app. Preserve a
+            // brief entry even if fullscreen ends before this main-actor task.
+            let observedFullscreenEntry = change.newValue?.contains(.fullScreen) == true
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                if observedFullscreenEntry { self.relinquishPanelKey() }
+                // Fresh system state decides visibility; a stale entry may
+                // collapse the panel but cannot keep it suppressed after exit.
+                self.reconcileVisibility()
+            }
+        }
         panel.title = "Goal Layer"
         panel.identifier = NSUserInterfaceItemIdentifier("GoalLayerOverlay")
         panel.isOpaque = false
@@ -45,7 +63,7 @@ final class NativeShell: NSObject, NSWindowDelegate {
         panel.hasShadow = false
         panel.level = .floating
         // Intentionally omit fullScreenAuxiliary / canJoinAllApplications for the first spike.
-        // Ordinary full-screen Spaces retain menu access; universal overlay support is unclaimed.
+        // Explicit access also checks fullscreen/Space policy before taking key.
         panel.collectionBehavior = [.canJoinAllSpaces,.transient,.ignoresCycle]
         panel.hidesOnDeactivate = false
         panel.becomesKeyOnlyIfNeeded = true
@@ -80,11 +98,24 @@ final class NativeShell: NSObject, NSWindowDelegate {
     }
 
     func expand() {
+        refreshSystemPresentationPolicy()
+        guard !systemFullscreen else { updateMenu(); return }
+        // Hidden-window Space prediction must pass before this intentional
+        // action can take key. Failed access preserves manual hide preferences.
+        guard place(expanded: true), panel.isOnActiveSpace else {
+            panel.orderOut(nil)
+            state.expanded = false
+            panel.expanded = false
+            reconcileVisibility()
+            updateMenu()
+            return
+        }
         state.overlayHidden = false
         state.presentationMode = false
         state.expanded = true
         panel.expanded = true
-        if place() { panel.makeKeyAndOrderFront(nil) } else { panel.orderOut(nil) }
+        updatePointerRegion()
+        panel.makeKeyAndOrderFront(nil)
         updateMenu()
     }
 
@@ -98,21 +129,28 @@ final class NativeShell: NSObject, NSWindowDelegate {
     }
 
     func showManagementWindow() {
+        refreshSystemPresentationPolicy()
+        guard !systemFullscreen else { updateMenu(); return }
         collapse()
         if managementWindow == nil {
             let window = NSWindow(contentRect: CGRect(x: 0,y: 0,width: 640,height: 680),styleMask: [.titled,.closable,.miniaturizable,.resizable],backing: .buffered,defer: false)
             window.title = "Goal Layer · Plan and Settings"
+            window.collectionBehavior = [.moveToActiveSpace, .fullScreenNone, .fullScreenDisallowsTiling]
             window.contentView = NSHostingView(rootView: PlanningWindowView(state: state))
             window.minSize = NSSize(width: 460,height: 500)
             window.isReleasedWhenClosed = false
             window.center()
             managementWindow = window
         }
+        // Activation itself can switch Spaces, so check before activating,
+        // without ordering an off-Space window to force eligibility.
+        guard let window = managementWindow, window.isOnActiveSpace else { updateMenu(); return }
         NSApp.activate(ignoringOtherApps: false)
-        managementWindow?.makeKeyAndOrderFront(nil)
+        window.makeKeyAndOrderFront(nil)
+        updateMenu()
     }
 
-    @discardableResult func place() -> Bool {
+    @discardableResult func place(expanded: Bool? = nil) -> Bool {
         let screens = NSScreen.screens
         let screen = screens.first(where: { displayUUID($0) == selectedDisplayUUID && selectedDisplayUUID != nil }) ?? screens.first
         guard let screen else { return false }
@@ -120,14 +158,48 @@ final class NativeShell: NSObject, NSWindowDelegate {
         let usable = OverlayPlacement.usableFrame(screen: screen.frame,visible: screen.visibleFrame,
                                                  safeInsets: (insets.top,insets.left,insets.bottom,insets.right))
         guard !usable.isNull, usable.width >= 32, usable.height >= 32 else { return false }
-        panel.setFrame(OverlayPlacement.frame(usable: usable,expanded: state.expanded),display: true)
+        panel.setFrame(OverlayPlacement.frame(usable: usable,expanded: expanded ?? state.expanded),display: true)
         updatePointerRegion()
         return true
     }
 
-    private func reconcileVisibility() {
-        guard !state.overlayHidden, !state.presentationMode, place() else { panel.orderOut(nil); return }
+    @discardableResult private func refreshSystemPresentationPolicy() -> Bool {
+        let fullscreen = NSApp.currentSystemPresentationOptions.contains(.fullScreen)
+        guard fullscreen != systemFullscreen else { return false }
+        // Set suppression before any collapse/reconciliation could reorder the
+        // pill. Both transitions relinquish key; restoration is collapsed only.
+        systemFullscreen = fullscreen
+        relinquishPanelKey()
+        return true
+    }
+
+    private func relinquishPanelKey() {
+        panel.orderOut(nil)
+        state.expanded = false
+        panel.expanded = false
+    }
+
+    private func reconcileVisibility(updateRecoveryMenu: Bool = true) {
+        let presentationChanged = refreshSystemPresentationPolicy()
+        defer { if presentationChanged && updateRecoveryMenu { synchronizeAccessEligibility() } }
+        guard !systemFullscreen, !state.overlayHidden, !state.presentationMode,
+              place(), panel.isOnActiveSpace else { panel.orderOut(nil); return }
         panel.orderFrontRegardless()
+    }
+
+    func menuWillOpen(_ menu: NSMenu) {
+        if !trackingRecoveryMenus.contains(where: { $0 === menu }) { trackingRecoveryMenus.append(menu) }
+    }
+
+    func menuDidClose(_ menu: NSMenu) {
+        trackingRecoveryMenus.removeAll { $0 === menu }
+    }
+
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        // Update the tracked menu in place; replacing it while it is opening
+        // could leave stale enabling. Every action also checks the current mode.
+        if refreshSystemPresentationPolicy() { reconcileVisibility(updateRecoveryMenu: false) }
+        updateAccessEligibility(menu)
     }
 
     private func updatePointerRegion() {
@@ -179,7 +251,11 @@ final class NativeShell: NSObject, NSWindowDelegate {
     }
 
     func diagnosticState() -> [String: Any] {
-        ["schema": "native-spike-diagnostics-v1", "expanded": state.expanded,
+        ["schema": "native-spike-diagnostics-v2", "expanded": state.expanded,
+         "fullscreen_fallback_active": systemFullscreen,
+         "panel_visible": panel.isVisible, "panel_on_active_space": panel.isOnActiveSpace,
+         "planning_window_exists": managementWindow != nil,
+         "planning_window_on_active_space": managementWindow?.isOnActiveSpace ?? false,
          "app_active": NSApp.isActive, "panel_key": panel.isKeyWindow,
          "window_level": panel.level.rawValue, "display_count": NSScreen.screens.count,
          "frame": ["x": panel.frame.minX,"y": panel.frame.minY,"width": panel.frame.width,"height": panel.frame.height],
@@ -196,9 +272,18 @@ final class NativeShell: NSObject, NSWindowDelegate {
     }
 
     private func updateMenu() {
+        // An already-tracking menu stays retained by AppKit. Update it too,
+        // even if a display/menu refresh replaces the status item's menu.
+        synchronizeAccessEligibility()
         let menu = NSMenu()
+        menu.autoenablesItems = false
+        menu.delegate = self
         menu.addItem(item("Open Goal Layer",#selector(openFromMenu)))
         menu.addItem(item("Plan and Settings…",#selector(settingsFromMenu)))
+        let accessExplanation = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+        accessExplanation.identifier = NSUserInterfaceItemIdentifier("WindowAccessExplanation")
+        accessExplanation.isEnabled = false
+        menu.addItem(accessExplanation)
         menu.addItem(item(state.overlayHidden ? "Restore overlay" : "Hide overlay",#selector(toggleOverlay)))
         let presentation = item("Presentation mode",#selector(togglePresentation))
         presentation.state = state.presentationMode ? .on : .off
@@ -215,12 +300,37 @@ final class NativeShell: NSObject, NSWindowDelegate {
         menu.addItem(displayItem)
         menu.addItem(.separator())
         let observation = NSMenuItem(title: "Observation off — not implemented",action: nil,keyEquivalent: "")
+        observation.isEnabled = false
         menu.addItem(observation)
         let quitItem = item("Quit Goal Layer",#selector(quit))
         quitItem.keyEquivalent = "q"
         menu.addItem(quitItem)
+        updateAccessEligibility(menu)
         statusItem.menu = menu
-        NSApp.mainMenu?.items.first?.submenu = menu.copy() as? NSMenu
+        if let applicationMenu = menu.copy() as? NSMenu {
+            applicationMenu.autoenablesItems = false
+            applicationMenu.delegate = self
+            NSApp.mainMenu?.items.first?.submenu = applicationMenu
+        }
+    }
+
+    private func synchronizeAccessEligibility() {
+        let currentMenus = [statusItem?.menu, NSApp.mainMenu?.items.first?.submenu].compactMap { $0 }
+        for menu in currentMenus + trackingRecoveryMenus { updateAccessEligibility(menu) }
+    }
+
+    private func updateAccessEligibility(_ menu: NSMenu) {
+        let planningOnActiveSpace = managementWindow?.isOnActiveSpace ?? true
+        for item in menu.items {
+            if item.action == #selector(openFromMenu) { item.isEnabled = !systemFullscreen }
+            if item.action == #selector(settingsFromMenu) {
+                item.isEnabled = !systemFullscreen && planningOnActiveSpace
+            }
+            if item.identifier?.rawValue == "WindowAccessExplanation" {
+                item.title = systemFullscreen ? "Leave fullscreen to open Goal Layer" : "Return to the planning window's Space to edit"
+                item.isHidden = !systemFullscreen && planningOnActiveSpace
+            }
+        }
     }
 
     private func displayID(_ screen: NSScreen) -> UInt32? {

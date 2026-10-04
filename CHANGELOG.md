@@ -18,3 +18,7 @@ Manual goal/reward persistence, AI, observation, source verification, community 
 - Added coordinated synthetic focus reporting, a clearly explained temporary QA helper, strict report analysis with 50 constructed cases, and a thirty-minute resource sampling route. Native typing and final resource gates remain pending.
 
 - Measured a CPU budget failure (1.082% against <1%) and reduced repeated pointer-hit work. Thirty-minute memory was 50.172 MiB. Fresh resource verification and native pointer/focus gates remain pending.
+
+
+- Completed the pointer-optimized resource run: 0.6393% CPU over its specified ten-minute window and 28.5 MiB RSS after thirty minutes. Preserved the preceding failure and the 1.3522% whole-run CPU average.
+- Implemented a conservative public-API fullscreen/Space guard with collapsed restoration and tracked-menu eligibility; local build, 16 geometry checks and ad-hoc signature passed. Native fullscreen QA and a new guard-build resource sample remain pending.

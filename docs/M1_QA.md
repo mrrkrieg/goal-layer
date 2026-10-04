@@ -42,6 +42,13 @@ The opt-in helper compares its own text with the known fixture on every callback
 
 Review synthetic reports before publishing. Keep interrupted or nonsynthetic runs private. Record the native interaction separately; these logs cannot replace the required demonstration.
 
+
+## Fullscreen and Space fallback check
+
+This guard is compiled and source-reviewed; the following native checks are still unrun. Use a blank synthetic page in Safari and Chrome and the synthetic Goal Layer draft. Enter fullscreen with the panel initially expanded, then reveal the menu bar. Confirm the pill hides, Open/Plan are disabled with the fullscreen explanation, and the recovery controls remain reachable without changing Space or exiting the browser. Leave fullscreen and confirm only the collapsed nonkey pill returns when hide/presentation preferences permit. Repeat with manual hiding and presentation mode enabled to ensure neither preference is cleared. Inspect brief fullscreen enter/exit, menu tracking during a transition, maximized windows, separate display Spaces, and Stage Manager on/off.
+
+Open the ordinary planning window, switch to another normal Space, and request planning through the recovery menu. It must either open on the current Space after its public Space check succeeds, or remain unavailable with an explanation; the action must never switch Spaces. Recheck after close/minimize and display changes. The planning window disallows fullscreen and secondary fullscreen tiling in this spike. No global shortcut is assigned, including in fallback. A source review or hidden-window prediction alone cannot pass this matrix.
+
 ## Remaining native matrix
 
 Record device/OS, display scale/geometry, command or action, result, and a short scoped demonstration for each applicable row. The roadmap's criteria remain unchanged.
