@@ -21,7 +21,7 @@ struct OverlayRoot: View {
     private var pill: some View {
         Button(action: state.openPanel) {
             HStack(spacing: 10) {
-                Image(systemName: "sparkle").foregroundStyle(colorScheme == .dark ? Palette.mint : Color(red: 0.14,green: 0.43,blue: 0.38))
+                CompanionView(trait: state.trait, portrait: true).frame(width: 26, height: 26)
                 Text(state.feedback.isEmpty ? state.nextAction : state.feedback).lineLimit(1)
                 Spacer(minLength: 0)
                 Image(systemName: "chevron.down").font(.system(size: 10, weight: .semibold))
@@ -44,7 +44,7 @@ struct OverlayRoot: View {
             }.buttonStyle(.plain).padding(.horizontal, 20).padding(.vertical, 15)
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    ObservatoryView(trait: state.trait)
+                    ObservatoryView(trait: state.trait, animated: !state.quiet)
                     HStack(spacing: 6) {
                         Image(systemName: "lock.fill")
                         Text("Local preview · Observation off").font(.system(size: 12))
@@ -115,7 +115,7 @@ struct PlanningWindowView: View {
                 Toggle("Larger overlay text",isOn: $state.largerText)
                 Toggle("Quiet feedback",isOn: $state.quiet)
                 Text("Observation is off. AI and community are not connected.").foregroundStyle(.secondary)
-                Text("Click the menu bar observatory to hide or restore the overlay, choose a display, and enter presentation mode. No global shortcut is assigned.").foregroundStyle(.secondary)
+                Text("Click the menu bar observatory to hide or restore the overlay, choose a display and top-right or top-center position, and enter presentation mode. No global shortcut is assigned.").foregroundStyle(.secondary)
                 Button("Return to overlay",action: state.openPanel).buttonStyle(.borderedProminent)
             }.padding(32).frame(maxWidth: 650)
         }.frame(minWidth: 460,minHeight: 500)

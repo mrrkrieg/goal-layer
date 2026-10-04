@@ -1,10 +1,18 @@
 import AppKit
+import SwiftUI
 
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
     var shell: NativeShell?
     func applicationDidFinishLaunching(_ notification: Notification) {
         let arguments = CommandLine.arguments
+        // Export only our original art offscreen, without creating the desktop shell.
+        if let path = Self.argument("--art-preview", in: arguments) {
+            do { try Self.saveArtwork(to: path, time: Double(Self.argument("--art-time", in: arguments) ?? "0") ?? 0) }
+            catch { print("Artwork save failed: \(error)") }
+            NSApp.terminate(nil)
+            return
+        }
         let state = SpikeState(isDemo: arguments.contains("--demo"))
         shell = NativeShell(state: state)
         if arguments.contains("--expanded") { shell?.expand() }
@@ -70,6 +78,25 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
+    private static func saveArtwork(to path: String, time: TimeInterval) throws {
+        let bounds = NSRect(x: 0, y: 0, width: 400, height: 136)
+        let view = NSHostingView(rootView: ObservatoryView(trait: .explorer, sampleTime: time))
+        // A retained but unordered window supplies native rendering context only.
+        let window = NSWindow(contentRect: bounds, styleMask: .borderless, backing: .buffered, defer: false)
+        window.contentView = view
+        view.frame = bounds
+        view.layoutSubtreeIfNeeded()
+        guard let bitmap = view.bitmapImageRepForCachingDisplay(in: bounds) else {
+            throw CocoaError(.fileWriteUnknown)
+        }
+        view.cacheDisplay(in: bounds, to: bitmap)
+        guard let png = bitmap.representation(using: .png, properties: [:]) else {
+            throw CocoaError(.fileWriteUnknown)
+        }
+        try png.write(to: URL(fileURLWithPath: path), options: .atomic)
+        withExtendedLifetime(window) {}
+    }
+
     private static func argument(_ name: String, in arguments: [String]) -> String? {
         guard let index = arguments.firstIndex(of: name), arguments.indices.contains(index + 1) else { return nil }
         return arguments[index + 1]

@@ -8,7 +8,7 @@ Avoid filling the interface with competing counters, banners, confetti, badges, 
 2. Surface model
 Collapsed top pill
 - Default size: 300 × 36 points.
-- Position: centered near the top of the primary display by default, or the user's pinned display, below the menu bar and notch safe area. It does not chase the pointer between displays by default.
+- Position: top-right on the primary display by default, or the user's pinned display, with a 16-point horizontal inset below the menu bar and notch safe area. The user can choose Top center in the recovery menu; expansion keeps the same anchor edge. It does not chase the pointer between displays by default.
 - Default corner radius: 18 points.
 - Keep a small visible gap from the menu bar; never draw through a camera notch or obscure menu items.
 - Respect available space on each display rather than treating the notch as a fixed size.
@@ -83,6 +83,7 @@ No account or observation permission is required. If planning takes longer becau
 Initial scene
 The starting world is small: a circular platform floating in a dark sky, a simple telescope, one lantern, a few plants or tools, and the chosen companion. It should look intentional before the first reward is earned.
 Use a 2D implementation for the first version. Layered illustration, controlled lighting, and small animations can create depth without requiring a 3D environment.
+The M1 companion presentation uses an expressive helmet and visor, a scarf, gloves and boots, with cosmetic trait colors. Gentle breathing, blinking and an occasional wave run only in the expanded overlay. The collapsed avatar and retained planning-window scene stay static. Quiet feedback and system Reduce Motion disable idle motion; collapsing or hiding removes its animation schedule.
 Persistent development
 Milestones introduce lasting details:
 - A new telescope component.

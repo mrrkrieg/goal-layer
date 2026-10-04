@@ -16,7 +16,9 @@ The standalone foundation is prepared locally. A synthetic native overlay spike 
 | Invite communities, chat, selected sharing, challenge leaderboard | Planned for M6 |
 | Public beta packaging and distribution | Planned for M7 |
 
-![Synthetic native observatory preview](docs/evidence/M1-observatory-dark.png)
+![Original synthetic companion motion fixture](docs/evidence/M1-companion-motion-preview.gif)
+
+The compact overlay now defaults to top-right. Its Position menu saves Top right or Top center, and expansion keeps the same anchor edge. The explorer companion blinks, breathes and occasionally waves while expanded; the collapsed avatar and planning-window scene stay static. Quiet feedback and system Reduce Motion disable the idle animation. The illustration above is an offscreen synthetic artwork fixture, not a desktop recording.
 
 Read [current status and pending gates](docs/STATUS.md) before treating any behavior as supported. The original specifications retain their initial documentation-only status statements; the status record describes implementation work since that handoff.
 
@@ -34,7 +36,7 @@ From the project root, the M1 development entry points are:
 open build/Goal\ Layer.app --args --demo
 ```
 
-These commands describe the implementation route; fresh-checkout builds, 16/16 assertions, and CI passed; exact scope and results are in [Status](docs/STATUS.md) and the milestone evidence. `swift test --scratch-path .build --disable-sandbox` failed in this Command Line Tools environment because XCTest is unavailable (`no such module XCTest`). `scripts/test.sh` runs the deterministic standalone `GoalLayerChecks` executable instead; geometry checks do not replace native interaction testing.
+These commands describe the implementation route; initial fresh-checkout builds, 16/16 assertions, and CI passed; the corner-placement revision passed 28/28 local geometry assertions. Exact scope and results are in [Status](docs/STATUS.md) and the milestone evidence. `swift test --scratch-path .build --disable-sandbox` failed in this Command Line Tools environment because XCTest is unavailable (`no such module XCTest`). `scripts/test.sh` runs the deterministic standalone `GoalLayerChecks` executable instead; geometry checks do not replace native interaction testing.
 
 The demo is a synthetic native interaction spike. It does not create real goals, award persistent XP, observe activity, or communicate with an AI provider or community. It needs no account, API key, model, server, browser extension, or observation permission. Its interaction claims remain subject to the M1 walkthrough. The [M1 QA procedure](docs/M1_QA.md) documents the temporary typing helper and scoped measurement tools.
 
@@ -44,7 +46,7 @@ The M1 shell implements a conservative fullscreen guard using a public presentat
 
 Real goal progress, personal XP, and shared challenge points are separate measurements. Personal XP follows accepted, frozen quest allocations; time, clicks, typing, browsing, prompts, and community engagement do not independently award it. AI recommendations cannot accept completions or write the reward ledger. Source confirmation proves only its named predicate. The canonical policy is in [Scoring](docs/SCORING.md).
 
-M1 uses synthetic in-memory presentation data plus a local display preference. Pointer events serve native dismissal and hit testing only; they are not retained. The shell reads a public fullscreen presentation flag for window behavior, without reading or retaining another app's identity or content. It has no goal-activity observation or network integration. Opt-in QA diagnostics compare only the known synthetic typing helper’s frontmost identity and record booleans; they do not record other app identities or content. The complete manual offline workflow is an M2 requirement. Later observation, AI transmission, community membership, and public sharing each require their own explicit scope. Joining a community must not expose personal goals or evidence. Personal XP must never be used as a competitive community total. Planned collection, pause, retention, deletion, and local-only rules are in [Architecture](docs/ARCHITECTURE.md) and [Security](SECURITY.md).
+M1 uses synthetic in-memory presentation data plus local display and overlay-position preferences. Pointer events serve native dismissal and hit testing only; they are not retained. The shell reads a public fullscreen presentation flag for window behavior, without reading or retaining another app's identity or content. It has no goal-activity observation or network integration. Opt-in QA diagnostics compare only the known synthetic typing helper’s frontmost identity and record booleans; they do not record other app identities or content. The complete manual offline workflow is an M2 requirement. Later observation, AI transmission, community membership, and public sharing each require their own explicit scope. Joining a community must not expose personal goals or evidence. Personal XP must never be used as a competitive community total. Planned collection, pause, retention, deletion, and local-only rules are in [Architecture](docs/ARCHITECTURE.md) and [Security](SECURITY.md).
 
 ## Contributing
 

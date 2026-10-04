@@ -1,0 +1,15 @@
+{
+  "schema": "corner-companion-source-fingerprint-v1",
+  "recorded_at": "2026-10-04T02:46:56.423036+00:00",
+  "source_sha256": {
+    "apps/macos/Geometry/Placement.swift": "941eceeac8eb8f83c23c13e867c9f3492e2caf3520fc2636b9bc88dec1e13b15",
+    "Tests/GoalLayerTests/main.swift": "d51cc3cdaa17e98cb374cafb0eb57f8cb6e70c8a00d9a199ba30784f4cf1b0af",
+    "apps/macos/Sources/NativeShell.swift": "5b349c271d8f0b3ffb58613c751e0275db6e9ac6833acb53ccc9c4f465ea113e",
+    "apps/macos/Sources/CompanionView.swift": "c25f76867477bc62c4cb68406e258663d9e7da3748509e41045d0f0d5182a070",
+    "apps/macos/Sources/ObservatoryView.swift": "22081c27b917e3152d5f3eb7119aedd672a67977459a967e7784db0390798652",
+    "apps/macos/Sources/OverlayViews.swift": "9697096a8a758d370815f4d74817128c03820872da0f2bc5d7df03ca05462d66",
+    "apps/macos/Sources/Main.swift": "66a28c7abcb59913f57bc44d0a3a6dfc61f5aa4c6adf5ae7a3e444f3a0221eaf"
+  },
+  "binary_sha256": "5b4049677aeff8989d9f05fa7c1599f495a73d1d33343209cf894d21d759904c",
+  "scope": "Original synthetic artwork, placement geometry, collapsed native launch. Not a complete M1 acceptance or resource sample."
+}

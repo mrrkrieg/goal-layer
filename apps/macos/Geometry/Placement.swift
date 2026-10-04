@@ -2,6 +2,11 @@ import CoreGraphics
 
 /// All values are screen points, including negative display origins.
 public enum OverlayPlacement {
+    public enum Anchor: String, CaseIterable, Sendable {
+        case topRight = "top-right"
+        case topCenter = "top-center"
+    }
+
     public static func containsVisiblePoint(_ point: CGPoint, frame: CGRect, expanded: Bool) -> Bool {
         // Most global pointer events are outside the small panel. Reject them
         // without allocating a path; include boundaries so CGPath retains the
@@ -18,12 +23,18 @@ public enum OverlayPlacement {
         return safe.intersection(visible)
     }
 
-    public static func frame(usable: CGRect, expanded: Bool, horizontalOffset: CGFloat = 0) -> CGRect {
+    public static func frame(usable: CGRect, expanded: Bool, anchor: Anchor = .topRight, horizontalOffset: CGFloat = 0) -> CGRect {
+        guard !usable.isNull, !usable.isInfinite, usable.width > 0, usable.height > 0 else { return .null }
         let gap: CGFloat = min(8, max(0, usable.height / 10))
-        let width = min(expanded ? 460 : 300, max(1, usable.width - 16))
-        let height = min(expanded ? 560 : 36, max(1, usable.height - gap * 2))
-        let centeredX = usable.midX - width / 2 + horizontalOffset
-        let x = min(max(centeredX, usable.minX + 8), usable.maxX - width - 8)
+        // Preserve a 16-point side inset where possible. A very narrow usable
+        // area reduces the inset rather than pushing the frame off the display.
+        let inset = min(16, max(0, (usable.width - 1) / 2))
+        let width = min(expanded ? 460 : 300, max(0, usable.width - inset * 2))
+        let height = min(expanded ? 560 : 36, max(0, usable.height - gap * 2))
+        let minX = usable.minX + inset
+        let maxX = usable.maxX - width - inset
+        let anchoredX = anchor == .topRight ? maxX : usable.midX - width / 2
+        let x = min(max(anchoredX + horizontalOffset, minX), maxX)
         return CGRect(x: x, y: usable.maxY - gap - height, width: width, height: height)
     }
 }

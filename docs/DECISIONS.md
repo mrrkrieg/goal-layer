@@ -113,3 +113,14 @@ The official [macOS 15 runner inventory](https://github.com/actions/runner-image
 The public destination was verified as `mrrkrieg/goal-layer` using authenticated GitHub CLI and connector identity checks. Repository creation and public visibility are verified; source push and CI are recorded separately. Native display preferences now use the public ColorSync display UUID conversion; temporary display numbers are not persisted.
 
 The first pinned CI run passed on macOS 15.7.9 arm64 with Swift 6.0.3 and SDK 15.2. This is build/geometry support only; the native interaction support matrix remains incomplete.
+
+
+## ADR-007: User-selected corner placement and companion motion
+
+**Status:** accepted for the M1 presentation revision. **Owner:** native app maintainer. **Dependency:** M1.
+
+The user requested removing the current large preview from their desktop, moving the compact overlay to the top-right, and replacing the flat figure with a cooler, more expressive animated companion. This supersedes the original top-center default. Default to top-right with a 16-point horizontal inset and the existing menu-bar/camera-safe vertical gap. Keep the expanded panel on the same right edge; persist a Top right / Top center preference in the recovery menu. Clamp both modes to the selected display's usable bounds. Preserve display pinning, fullscreen/Space guards, and deliberate-focus rules.
+
+Use original SwiftUI vector artwork: a rounded explorer helmet, expressive visor, scarf, gloves and boots, with cosmetic role colors. The collapsed avatar and retained planning-window illustration are static. Only the expanded companion uses a local, bounded animation schedule for breathing, blinking and a brief wave. Quiet feedback and system Reduce Motion select the static rendering path. Collapsing or hiding removes the animated view. Keep the observatory background separate from the animated sprite so each animation tick redraws only the small character. Animation does not create rewards or imply accepted work.
+
+A development-only offscreen artwork export renders the app's own synthetic illustration without opening a desktop panel or reading screen content. Appearance samples are not native interaction or resource-budget acceptance. The previous guard-build CPU/memory sample remains scoped to its recorded source and binary, predating this visual revision.

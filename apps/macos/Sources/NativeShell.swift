@@ -30,6 +30,7 @@ final class NativeShell: NSObject, NSWindowDelegate, NSMenuDelegate {
     private var notificationTokens: [NSObjectProtocol] = []
     private var workspaceTokens: [NSObjectProtocol] = []
     private var selectedDisplayUUID: String?
+    private var overlayPosition: OverlayPlacement.Anchor = .topRight
     private var presentationObserver: NSKeyValueObservation?
     private var systemFullscreen = false
     private var trackingRecoveryMenus: [NSMenu] = []
@@ -41,6 +42,7 @@ final class NativeShell: NSObject, NSWindowDelegate, NSMenuDelegate {
                              styleMask: [.borderless,.nonactivatingPanel], backing: .buffered, defer: false)
         super.init()
         selectedDisplayUUID = settings.string(forKey: "selectedDisplayUUID")
+        overlayPosition = settings.string(forKey: "overlayPosition").flatMap { OverlayPlacement.Anchor(rawValue: $0) } ?? .topRight
         // Suppression must be known before the first panel ordering. This public
         // UI-mode flag neither identifies nor reads another application's content.
         systemFullscreen = NSApp.currentSystemPresentationOptions.contains(.fullScreen)
@@ -158,7 +160,7 @@ final class NativeShell: NSObject, NSWindowDelegate, NSMenuDelegate {
         let usable = OverlayPlacement.usableFrame(screen: screen.frame,visible: screen.visibleFrame,
                                                  safeInsets: (insets.top,insets.left,insets.bottom,insets.right))
         guard !usable.isNull, usable.width >= 32, usable.height >= 32 else { return false }
-        panel.setFrame(OverlayPlacement.frame(usable: usable,expanded: expanded ?? state.expanded),display: true)
+        panel.setFrame(OverlayPlacement.frame(usable: usable,expanded: expanded ?? state.expanded,anchor: overlayPosition),display: true)
         updatePointerRegion()
         return true
     }
@@ -183,7 +185,7 @@ final class NativeShell: NSObject, NSWindowDelegate, NSMenuDelegate {
         let presentationChanged = refreshSystemPresentationPolicy()
         defer { if presentationChanged && updateRecoveryMenu { synchronizeAccessEligibility() } }
         guard !systemFullscreen, !state.overlayHidden, !state.presentationMode,
-              place(), panel.isOnActiveSpace else { panel.orderOut(nil); return }
+              place(), panel.isOnActiveSpace else { relinquishPanelKey(); return }
         panel.orderFrontRegardless()
     }
 
@@ -258,6 +260,7 @@ final class NativeShell: NSObject, NSWindowDelegate, NSMenuDelegate {
          "planning_window_on_active_space": managementWindow?.isOnActiveSpace ?? false,
          "app_active": NSApp.isActive, "panel_key": panel.isKeyWindow,
          "window_level": panel.level.rawValue, "display_count": NSScreen.screens.count,
+         "overlay_position": overlayPosition.rawValue,
          "frame": ["x": panel.frame.minX,"y": panel.frame.minY,"width": panel.frame.width,"height": panel.frame.height],
          "displays": NSScreen.screens.map { screen in
              ["frame": ["x":screen.frame.minX,"y":screen.frame.minY,"width":screen.frame.width,"height":screen.frame.height],
@@ -288,6 +291,19 @@ final class NativeShell: NSObject, NSWindowDelegate, NSMenuDelegate {
         let presentation = item("Presentation mode",#selector(togglePresentation))
         presentation.state = state.presentationMode ? .on : .off
         menu.addItem(presentation)
+        let positionMenu = NSMenu()
+        positionMenu.autoenablesItems = false
+        positionMenu.delegate = self
+        for position in OverlayPlacement.Anchor.allCases {
+            let title = position == .topRight ? "Top right" : "Top center"
+            let positionItem = item(title,#selector(selectPosition(_:)))
+            positionItem.representedObject = position.rawValue
+            positionItem.state = position == overlayPosition ? .on : .off
+            positionMenu.addItem(positionItem)
+        }
+        let positionItem = NSMenuItem(title: "Position",action: nil,keyEquivalent: "")
+        positionItem.submenu = positionMenu
+        menu.addItem(positionItem)
         let displayMenu = NSMenu()
         for screen in NSScreen.screens {
             let displayItem = item(screen.localizedName,#selector(selectDisplay(_:)))
@@ -330,6 +346,10 @@ final class NativeShell: NSObject, NSWindowDelegate, NSMenuDelegate {
                 item.title = systemFullscreen ? "Leave fullscreen to open Goal Layer" : "Return to the planning window's Space to edit"
                 item.isHidden = !systemFullscreen && planningOnActiveSpace
             }
+            if item.action == #selector(selectPosition(_:)) {
+                item.state = (item.representedObject as? String) == overlayPosition.rawValue ? .on : .off
+            }
+            if let submenu = item.submenu { updateAccessEligibility(submenu) }
         }
     }
 
@@ -372,6 +392,14 @@ final class NativeShell: NSObject, NSWindowDelegate, NSMenuDelegate {
         guard let uuid = sender.representedObject as? String else { return }
         selectedDisplayUUID = uuid
         settings.set(uuid,forKey: "selectedDisplayUUID")
+        reconcileVisibility()
+        updateMenu()
+    }
+    @objc private func selectPosition(_ sender: NSMenuItem) {
+        guard let rawValue = sender.representedObject as? String,
+              let position = OverlayPlacement.Anchor(rawValue: rawValue) else { return }
+        overlayPosition = position
+        settings.set(position.rawValue,forKey: "overlayPosition")
         reconcileVisibility()
         updateMenu()
     }

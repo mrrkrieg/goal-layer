@@ -22,3 +22,5 @@ Manual goal/reward persistence, AI, observation, source verification, community 
 
 - Completed the pointer-optimized resource run: 0.6393% CPU over its specified ten-minute window and 28.5 MiB RSS after thirty minutes. Preserved the preceding failure and the 1.3522% whole-run CPU average.
 - Implemented a conservative public-API fullscreen/Space guard with collapsed restoration and tracked-menu eligibility; local build, 16 geometry checks and ad-hoc signature passed. The guard-build resource sample passed: 0.6043% ten-minute CPU and 38.641 MiB RSS after thirty minutes. Native fullscreen, controlled focus/pointer, display, accessibility, P95 latency and recording gates remain pending.
+
+- Updated the user-requested top-right default, persistent position menu and shared right edge for expansion. Added an original expressive explorer companion with expanded-only breathing, blinking and waving; Quiet feedback and Reduce Motion select static art. Local build and 28 placement assertions passed, and the collapsed nonkey top-right launch was observed.
